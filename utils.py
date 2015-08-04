@@ -22,9 +22,10 @@ def get_content(url):
 	return r.text
 
 
-def bitauto_trace( lst, model, page, url_format , exit_func, deadline):
+def bitauto_trace( lst, model, page, url_format , deadline):
 	
 	url = url_format.format(page=page,model=model)
+	print url
 	content = get_content(url)
 
 	d = pq(content)
@@ -38,14 +39,14 @@ def bitauto_trace( lst, model, page, url_format , exit_func, deadline):
 		published = i('li.zhhf').html().strip()
 		now = datetime.datetime.utcnow()
 		now = now.strftime('%Y-%m-%dT%H:%M:%SZ')
-		if exit_func(published):
-			return lst
+		
+		print dict(title=title,href=href,author=author,published=published,insert_dt=now)
 		lst.append(dict(title=title,href=href,author=author,published=published,insert_dt=now))
 
 	return autohome_trace(lst,model,page,url_format,deadline)
 
 
-def autohome_trace( lst, model, page, url_format, exit_func, deadline):
+def autohome_trace( lst, model, page, url_format, deadline):
 
 	BASE_URL='http://club.autohome.com.cn'
 
@@ -69,13 +70,14 @@ def autohome_trace( lst, model, page, url_format, exit_func, deadline):
 
 	return autohome_trace(lst,model,page,url_format,deadline)
 
+"""
 def exit_func(published, deadline):
 	if ':' in published:
 		return False
 	elif published < deadline:
 		return True
 	return False
-
+"""
 
 def feed_item(item):
 	pass
