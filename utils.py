@@ -1,6 +1,5 @@
 # coding: utf-8
 
-
 import requests
 from pyquery import PyQuery as pq
 from config import USER_AGENTS, logger
@@ -8,6 +7,8 @@ import random
 import datetime
 import json
 from itertools import chain, count
+import os
+from multiprocessing import Pool
 
 
 def get_content(url):
@@ -85,15 +86,51 @@ def exit_func(published, deadline):
 
 
 def feed_item(item):
-    pass
+    assert 'type' in item
+    if item['type'] == 'autohome':
+        parser = autohome_trace
+    if item['type'] == 'bitauto':
+        parser = bitauto_trace
+    print list(parser(item['model'],'2015-08-08'))
 
 
-def parse_item():
-    with open('model.json') as f:
+rootdir = os.path.abspath(os.path.dirname(__file__))
+public = os.path.join(rootdir, 'json')
+
+def parse_bitauto():
+    with open(os.path.join(public, 'bitauto.json')) as f:
         data = json.load(f)
 
     keys = data.keys()
 
     for key in keys:
         item = data[key]
+        item['type'] = 'bitauto'
         yield item
+
+
+def parse_autohome():
+    with open(os.path.join(public, 'autohome.json')) as f:
+        data = json.load(f)
+
+    keys = data.keys()
+
+    for key in keys:
+        item = data[key]
+        item['type'] = 'autohome'
+        yield item  
+
+
+def things():
+    for item in parse_bitauto():
+        yield item
+    for item in parse_autohome():
+        yield item
+
+def main():
+    pool = Pool(processes=4)
+    rv = pool.map_async(feed_item, things())
+    rv.wait()
+
+if __name__ == '__main__':
+    main()
