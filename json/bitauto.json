@@ -1,0 +1,21 @@
+{
+"langjing":{
+	"brand":"SVW",
+	"model":"langjing"
+},
+"polo":
+{
+	"brand":"SVW",
+	"model":"polo"
+},
+"passat":
+{
+	"brand":"SVW",
+	"model":"passat"
+},
+"tiguan":
+{
+	"brand":"SVW",
+	"model":"tiguan"
+}
+}
