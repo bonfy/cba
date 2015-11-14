@@ -105,7 +105,7 @@ def parse_bitauto():
 
     for key in keys:
         item = data[key]
-        item['type'] = 'bitauto'
+        item['website'] = 'bitauto'
         yield item
 
 
@@ -117,7 +117,7 @@ def parse_autohome():
 
     for key in keys:
         item = data[key]
-        item['type'] = 'autohome'
+        item['website'] = 'autohome'
         yield item  
 
 
